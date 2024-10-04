@@ -1,11 +1,7 @@
 "use client"
 import { useCallback, useState } from "react";
-import { type CuisineData, TreeNode } from "./TreeNode";
-
-
-interface TreeCheckboxProps {
-  data: CuisineData[];
-}
+import { TreeNode } from "./TreeNode";
+import type { CuisineData, TreeCheckboxProps } from "@/types/type";
 
 const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
   const [treeData, setTreeData] = useState<CuisineData[]>(data);

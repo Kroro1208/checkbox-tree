@@ -4,21 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useState, useEffect, useCallback, useRef } from 'react';
-
-export interface CuisineData {
-  id: string;
-  label: string;
-  icon?: string;
-  checked?: boolean;
-  indeterminate?: boolean;
-  children?: CuisineData[]; // 階層構造の子要素なので配列
-}
-
-export interface TreeNodeProps {
-  node: CuisineData;
-  onCheck: (id: string, checked: boolean, isParent: boolean) => void; 
-  parentChecked?: boolean;
-}
+import type { TreeNodeProps } from '@/types/type';
 
 export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked = false }) => {
   const [checked, setChecked] = useState(node.checked || false);
