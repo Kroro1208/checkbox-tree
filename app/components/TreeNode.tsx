@@ -41,12 +41,14 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
     }
   },[indeterminate]);
 
+  // 親でも子でも自身のチェックボックスがチェックされた時に発火
   const handleCheck = useCallback((newChecked: boolean) => {
     setChecked(newChecked);
     setIndeterminate(false);
     onCheck(node.id, newChecked, true);
   }, [node.id, onCheck]);
 
+    // 子のチェックボックスがチェックされた時に発火
   const handleChildCheck = useCallback((childId: string, childChecked: boolean) => {
     onCheck(childId, childChecked, false);
     updateSelfState();
