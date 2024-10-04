@@ -1,14 +1,14 @@
 "use client"
 import { useCallback, useState } from "react";
 import { TreeNode } from "./TreeNode";
-import type { CuisineData, TreeCheckboxProps } from "@/types/type";
+import type { MusicData, TreeCheckboxProps } from "@/types/type";
 
 const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
-  const [treeData, setTreeData] = useState<CuisineData[]>(data);
+  const [treeData, setTreeData] = useState<MusicData[]>(data);
 
 
   // 親ノードがチェックされたときに、その子孫ノードすべてをチェックする
-  const updateNodeState = useCallback((nodes: CuisineData[], id: string, checked: boolean, isParent: boolean): CuisineData[] => {
+  const updateNodeState = useCallback((nodes: MusicData[], id: string, checked: boolean, isParent: boolean): MusicData[] => {
     return nodes.map(node => {
       if (node.id === id) {
         const updatedNode = { ...node, checked, indeterminate: false };
@@ -38,7 +38,7 @@ const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
 
   return (
     <div className="p-4 bg-white rounded-xl shadow-lg max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">World Cuisines</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">World Music</h2>
       {treeData.map(node => (
         // 最上位のノード
         <TreeNode key={node.id} node={node} onCheck={handleRootCheck} />

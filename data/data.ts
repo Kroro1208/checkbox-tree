@@ -1,6 +1,6 @@
-import type { CuisineData } from "@/types/type";
+import type { MusicData } from "@/types/type";
 
-export const worldMusicGenres: CuisineData[] = [
+export const worldMusicGenres: MusicData[] = [
   {
     id: '1',
     label: 'Western Music',
