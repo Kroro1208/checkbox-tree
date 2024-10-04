@@ -6,19 +6,22 @@ import type { MusicData, TreeCheckboxProps } from "@/types/type";
 const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
   const [treeData, setTreeData] = useState<MusicData[]>(data);
 
-
-  // 親ノードがチェックされたときに、その子孫ノードすべてをチェックする
-  const updateNodeState = useCallback((nodes: MusicData[], id: string, checked: boolean, isParent: boolean): MusicData[] => {
+  // ノードを深く更新するためのヘルパー関数
+  const updateNode = useCallback((nodes: MusicData[], id: string, checked: boolean): MusicData[] => {
     return nodes.map(node => {
       if (node.id === id) {
-        const updatedNode = { ...node, checked, indeterminate: false };
-        if (isParent && node.children) {
-          updatedNode.children = node.children.map(child => ({ ...child, checked, indeterminate: false }));
-        }
+        // 親ノードがチェック/アンチェックされた場合
+        const updatedNode = { 
+          ...node, 
+          checked, 
+          indeterminate: false,
+          children: node.children ? setChildrenChecked(node.children, checked) : node.children
+        };
         return updatedNode;
       }
       if (node.children) {
-        const updatedChildren = updateNodeState(node.children, id, checked, isParent);
+        // 子ノードの更新
+        const updatedChildren = updateNode(node.children, id, checked);
         const allChecked = updatedChildren.every(child => child.checked);
         const someChecked = updatedChildren.some(child => child.checked || child.indeterminate);
         return {
@@ -32,16 +35,25 @@ const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
     });
   }, []);
 
-  const handleRootCheck = useCallback((id: string, checked: boolean, isParent: boolean) => {
-    setTreeData(prevData => updateNodeState(prevData, id, checked, isParent));
-  }, [updateNodeState]);
+  // 子孫ノードを再帰的にチェック/アンチェックするヘルパー関数
+  const setChildrenChecked = (nodes: MusicData[], checked: boolean): MusicData[] => {
+    return nodes.map(node => ({
+      ...node,
+      checked,
+      indeterminate: false,
+      children: node.children ? setChildrenChecked(node.children, checked) : node.children
+    }));
+  };
+
+  const handleCheck = useCallback((id: string, checked: boolean) => {
+    setTreeData(prevData => updateNode(prevData, id, checked));
+  }, [updateNode]);
 
   return (
     <div className="p-4 bg-white rounded-xl shadow-lg max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">World Music</h2>
       {treeData.map(node => (
-        // 最上位のノード
-        <TreeNode key={node.id} node={node} onCheck={handleRootCheck} />
+        <TreeNode key={node.id} node={node} onCheck={handleCheck} />
       ))}
     </div>
   );
