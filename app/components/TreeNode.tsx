@@ -3,7 +3,7 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, ChevronDown } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export interface CuisineData {
   id: string;
@@ -24,6 +24,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
   const [checked, setChecked] = useState(node.checked || false);
   const [indeterminate, setIndeterminate] = useState(node.indeterminate || false); // 中間状態を管理(チェックがついているかつ全部チェックされていない状態)
   const [expanded, setExpanded] = useState(false); // 子要素の展開状態を管理
+  const checkBoxRef = useRef<HTMLInputElement>(null);
 
   // 直の親ノード更新ロジック(子が全てチェックされたら直の親もチェックされる等)
   const updateSelfState = useCallback(() => {
@@ -47,6 +48,12 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
       updateSelfState();
     }
   }, [parentChecked, updateSelfState]);
+
+  useEffect(() => {
+    if(checkBoxRef.current) {
+        checkBoxRef.current.indeterminate = indeterminate
+    }
+  },[indeterminate]);
 
   const handleCheck = useCallback((newChecked: boolean) => {
     setChecked(newChecked);
@@ -82,11 +89,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
           checked={checked}
           onCheckedChange={handleCheck}
           // @ts-expect-error
-          ref={(el: HTMLInputElement | null) => {
-            if (el) {
-              el.indeterminate = indeterminate;
-            }
-          }}
+          ref={checkBoxRef}
         />
         {node.icon && <span className="text-xl mr-2">{node.icon}</span>}
         <span className="text-lg font-medium">{node.label}</span>
