@@ -10,6 +10,8 @@ interface TreeCheckboxProps {
 const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
   const [treeData, setTreeData] = useState<CuisineData[]>(data);
 
+
+  // 親ノードがチェックされたときに、その子孫ノードすべてをチェックする
   const updateNodeState = useCallback((nodes: CuisineData[], id: string, checked: boolean, isParent: boolean): CuisineData[] => {
     return nodes.map(node => {
       if (node.id === id) {
@@ -42,6 +44,7 @@ const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
     <div className="p-4 bg-white rounded-xl shadow-lg max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">World Cuisines</h2>
       {treeData.map(node => (
+        // 最上位のノード
         <TreeNode key={node.id} node={node} onCheck={handleRootCheck} />
       ))}
     </div>

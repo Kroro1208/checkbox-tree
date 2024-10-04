@@ -1,4 +1,6 @@
-export const worldCuisinesData = [
+import type { CuisineData } from "@/app/components/TreeNode";
+
+export const worldCuisinesData: CuisineData[] = [
     {
       id: '1',
       label: 'Asian Cuisine',

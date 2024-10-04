@@ -11,20 +11,21 @@ export interface CuisineData {
   icon?: string;
   checked?: boolean;
   indeterminate?: boolean;
-  children?: CuisineData[];
+  children?: CuisineData[]; // 階層構造の子要素なので配列
 }
 
 export interface TreeNodeProps {
   node: CuisineData;
-  onCheck: (id: string, checked: boolean, isParent: boolean) => void;
+  onCheck: (id: string, checked: boolean, isParent: boolean) => void; 
   parentChecked?: boolean;
 }
 
 export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked = false }) => {
   const [checked, setChecked] = useState(node.checked || false);
-  const [indeterminate, setIndeterminate] = useState(node.indeterminate || false);
-  const [expanded, setExpanded] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(node.indeterminate || false); // 中間状態を管理(チェックがついているかつ全部チェックされていない状態)
+  const [expanded, setExpanded] = useState(false); // 子要素の展開状態を管理
 
+  // 直の親ノード更新ロジック(子が全てチェックされたら直の親もチェックされる等)
   const updateSelfState = useCallback(() => {
     if (node.children && node.children.length > 0) {
       const allChecked = node.children.every(child => child.checked);
@@ -32,6 +33,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
       setChecked(allChecked);
       setIndeterminate(!allChecked && someChecked);
     } else {
+    // 子ノードを持たないノードの状態更新ロジック
       setChecked(node.checked || false);
       setIndeterminate(false);
     }
@@ -92,6 +94,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
       {node.children && expanded && (
         <div className="ml-6 mt-1 border-l-2 border-gray-200 pl-2">
           {node.children.map(child => (
+            // 親を持つノード
             <TreeNode
               key={child.id}
               node={child}
