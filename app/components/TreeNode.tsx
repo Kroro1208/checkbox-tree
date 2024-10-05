@@ -45,7 +45,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
   const handleCheck = useCallback(
     (newChecked: boolean) => {
       setChecked(newChecked);
-      setIndeterminate(false);
+      setIndeterminate(false); // そのnodeと全ての子nodeがチェック
       onCheck(node.id, newChecked, true);
     },
     [node.id, onCheck]
@@ -79,8 +79,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
         ) : (
           <div className="w-6" />
         )}
-        <Checkbox
-          checked={checked}
+        <Checkbox checked={checked}
           onCheckedChange={handleCheck}
           // @ts-expect-error
           ref={checkBoxRef}
@@ -91,7 +90,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, onCheck, parentChecked
       {node.children && expanded && (
         <div className="ml-6 mt-1 border-l-2 border-gray-200 pl-2">
           {node.children.map(child => (
-            // 親を持つノード
+            // 最上位のノード以外のノード
             <TreeNode
               key={child.id}
               node={child}

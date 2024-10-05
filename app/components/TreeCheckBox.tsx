@@ -19,8 +19,8 @@ const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
   const updateNode = useCallback(
     (nodes: MusicData[], id: string, checked: boolean): MusicData[] => {
       return nodes.map(node => {
+        // 指定されたIDを持つノードとその子ノード全体のチェック状態を更新
         if (node.id === id) {
-          // 親がチェックされたかどうか
           const updatedNode = {
             ...node,
             checked,
@@ -47,6 +47,7 @@ const TreeCheckbox: React.FC<TreeCheckboxProps> = ({ data }) => {
     [setChildrenChecked]
   );
 
+  // 最上位のルートに対してのみ発火
   const handleRootCheck = useCallback((id: string, checked: boolean) => {
     setTreeData(prevData => updateNode(prevData, id, checked));
   }, [updateNode]);
